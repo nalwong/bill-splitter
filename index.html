@@ -184,7 +184,7 @@ function drawPeople(){
   }
   return '<div class="sec"><div class="sec-lbl">รายชื่อคน</div>'
     +'<div class="card">'+pl+'<div class="arow" onclick="addP()"><div class="aico">+</div><span class="albl">เพิ่มคน</span></div></div></div>'
-    +'<div class="sec"><div class="sec-lbl">ใครจ่ายบิลไปก่อน? (ยอดรวม Net [VAT+SVC])]</div>'
+    +'<div class="sec"><div class="sec-lbl">ใครจ่ายบิลไปก่อน?</div><div style="font-size:12px;color:var(--text2);padding:0 4px 8px">ใส่ยอดที่จ่ายจริง รวม VAT และ Service charge แล้ว</div>'
     +'<div class="card">'+pyl+'<div class="arow" onclick="payers.push({idx:0,amt:0});draw()"><div class="aico">+</div><span class="albl">เพิ่มคนจ่าย</span></div></div></div>'
     +'<div class="sec"><div class="sec-lbl">VAT / Service Charge</div>'
     +'<div class="card">'
@@ -276,8 +276,17 @@ function drawItems(){
       +'</div>';
   }
   var empty=items.length===0?'<div class="empty">📋 ยังไม่มีรายการ<br>ไปแท็บ "บิล" วางข้อความก่อนนะ</div>':'';
+    var allVat=items.length>0&&items.every(function(it){return it.vatOn!==false;});
+  var allSvc=items.length>0&&items.every(function(it){return it.svcOn!==false;});
+  var allPpl=items.length>0&&items.every(function(it){return it.who.length===people.length;});
+  var toggleBar=items.length>0?'<div style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-bottom:.5px solid var(--border);align-items:center">'
+    +'<span style="font-size:12px;color:var(--text2);margin-right:2px">ทั้งหมด:</span>'
+    +'<span class="tog'+(allPpl?' on':'')+'" onclick="toggleAllPpl()">👥 ทุกคน</span>'
+    +'<span class="tog'+(allVat?' on':'')+'" onclick="toggleAllVat()">VAT '+(allVat?'✓':'✗')+'</span>'
+    +'<span class="tog'+(allSvc?' on':'')+'" onclick="toggleAllSvc()">SVC '+(allSvc?'✓':'✗')+'</span>'
+    +'</div>':'';
   return '<div class="sec"><div class="sec-lbl">รายการอาหาร'+(items.length>0?' ('+items.length+')':'')+'</div>'
-    +'<div class="card">'+empty+il
+    +'<div class="card">'+toggleBar+empty+il
     +'<div class="arow" onclick="addItem()"><div class="aico">+</div><span class="albl">เพิ่มรายการเอง</span></div>'
     +'</div></div>';
 }
@@ -390,6 +399,23 @@ function copyRes(){
   else{var el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Copy แล้ว! 🎉');}
 }
 
+function toggleAllPpl(){
+  var allOn=items.every(function(it){return it.who.length===people.length;});
+  for(var i=0;i<items.length;i++){
+    items[i].who=allOn?[]:people.map(function(_,j){return j;});
+  }
+  draw();
+}
+function toggleAllVat(){
+  var allOn=items.every(function(it){return it.vatOn!==false;});
+  for(var i=0;i<items.length;i++) items[i].vatOn=!allOn;
+  draw();
+}
+function toggleAllSvc(){
+  var allOn=items.every(function(it){return it.svcOn!==false;});
+  for(var i=0;i<items.length;i++) items[i].svcOn=!allOn;
+  draw();
+}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 draw();
