@@ -8,87 +8,69 @@
 <title>Bill Splitter</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#fff;--bg2:#f5f5f7;--bg3:#ebebed;
-  --text:#1c1c1e;--text2:#636366;--text3:#aeaeb2;
-  --border:#e5e5ea;--blue:#007aff;--green:#34c759;--red:#ff3b30;
-  --card:#fff;--radius:12px;--rsm:8px;
-}
-@media(prefers-color-scheme:dark){:root{
-  --bg:#000;--bg2:#1c1c1e;--bg3:#2c2c2e;--text:#fff;
-  --text2:rgba(235,235,245,.8);--text3:rgba(235,235,245,.4);
-  --border:#38383a;--card:#1c1c1e;
-}}
+:root{--bg:#fff;--bg2:#f5f5f7;--bg3:#ebebed;--text:#1c1c1e;--text2:#636366;--text3:#aeaeb2;--border:#e5e5ea;--blue:#007aff;--green:#34c759;--red:#ff3b30;--card:#fff;--r:12px;--rs:8px}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--bg2:#1c1c1e;--bg3:#2c2c2e;--text:#fff;--text2:rgba(235,235,245,.8);--text3:rgba(235,235,245,.4);--border:#38383a;--card:#1c1c1e}}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh}
 .app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 .hdr{background:var(--bg);border-bottom:.5px solid var(--border);padding:12px 16px 0;position:sticky;top:0;z-index:10}
 .hdr-top{display:flex;align-items:center;gap:8px;padding-bottom:12px}
 .hdr-title{font-size:17px;font-weight:600}
-.hdr-badge{font-size:13px;color:var(--text2);margin-left:auto}
+.badge{font-size:13px;color:var(--text2);margin-left:auto}
 .tabs{display:flex;margin:0 -16px}
 .tab{flex:1;padding:10px 4px;font-size:12px;font-weight:500;border:none;background:none;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent}
 .tab.on{color:var(--blue);border-bottom-color:var(--blue)}
 .body{flex:1;padding:16px;padding-bottom:96px}
 .sec{margin-bottom:24px}
-.sec-lbl{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding:0 4px}
-.card{background:var(--card);border-radius:var(--radius);overflow:hidden;border:.5px solid var(--border)}
-/* rows */
+.slbl{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding:0 4px}
+.shint{font-size:12px;color:var(--text2);padding:0 4px 8px}
+.card{background:var(--card);border-radius:var(--r);overflow:hidden;border:.5px solid var(--border)}
 .row{display:flex;align-items:center;padding:12px 16px;border-bottom:.5px solid var(--border);gap:10px}
 .row:last-child{border-bottom:none}
 .lbl{font-size:15px;color:var(--text2);min-width:72px}
 .inp{flex:1;font-size:15px;border:none;background:transparent;color:var(--text);outline:none;text-align:right;font-family:inherit}
 .unit{font-size:15px;color:var(--text3);margin-left:2px}
-/* avatar */
 .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
-/* person */
 .prow{display:flex;align-items:center;padding:10px 16px;border-bottom:.5px solid var(--border);gap:10px}
 .prow:last-child{border-bottom:none}
 .pinp{flex:1;font-size:15px;font-weight:500;border:none;background:transparent;color:var(--text);outline:none;font-family:inherit}
 .ptag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:#e5f7ea;color:#1a7a34;white-space:nowrap}
 @media(prefers-color-scheme:dark){.ptag{background:#1a3d22;color:#4cd964}}
-/* payer */
 .pyrow{display:flex;align-items:center;padding:10px 16px;border-bottom:.5px solid var(--border);gap:10px}
 .pyrow:last-child{border-bottom:none}
 .pysel{flex:1;font-size:15px;border:none;background:transparent;color:var(--text);outline:none;cursor:pointer;font-family:inherit;appearance:none}
 .pyamt{width:80px;font-size:15px;border:none;background:transparent;color:var(--text);outline:none;text-align:right;font-family:inherit}
-/* add row */
 .arow{display:flex;align-items:center;padding:12px 16px;cursor:pointer;gap:10px}
 .arow:active{background:var(--bg3)}
 .aico{width:28px;height:28px;border-radius:50%;background:#e8f0fe;color:#007aff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 @media(prefers-color-scheme:dark){.aico{background:#1a2e4a;color:#409cff}}
 .albl{font-size:15px;color:var(--blue)}
-/* del */
 .del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px;line-height:1;padding:0 2px}
-/* chips */
 .chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px 16px 10px}
 .chip{font-size:13px;padding:5px 11px;border-radius:99px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:inherit}
 .chip.on{background:#e8f0fe;border-color:#007aff;color:#007aff;font-weight:500}
 @media(prefers-color-scheme:dark){.chip.on{background:#1a2e4a;border-color:#007aff;color:#409cff}}
-/* VAT/SC toggles per item */
 .togs{display:flex;gap:6px;padding:2px 16px 10px}
 .tog{font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--border);background:var(--bg2);color:var(--text3);cursor:pointer;font-family:inherit}
 .tog.on{background:#e8f0fe;border-color:#007aff;color:#007aff;font-weight:500}
 @media(prefers-color-scheme:dark){.tog.on{background:#1a2e4a;border-color:#007aff;color:#409cff}}
-/* food row */
+.tbar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-bottom:.5px solid var(--border);align-items:center}
+.tbar-lbl{font-size:12px;color:var(--text2);margin-right:2px}
 .fhdr{display:flex;align-items:center;gap:8px;padding:11px 16px 4px}
 .finp{flex:1;font-size:15px;font-weight:500;border:none;background:transparent;color:var(--text);outline:none;font-family:inherit}
 .fpinp{width:70px;font-size:15px;border:none;background:transparent;color:var(--text);outline:none;text-align:right;font-family:inherit}
-/* paste */
-.paste-card{background:var(--card);border-radius:var(--radius);border:.5px solid var(--border);overflow:hidden}
-.paste-hint{font-size:13px;color:var(--text2);padding:12px 16px 6px;line-height:1.6}
-.prompt-box{margin:0 16px 8px;background:var(--bg2);border-radius:var(--rsm);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.7;border:.5px solid var(--border)}
-.copy-btn{display:block;width:calc(100% - 32px);margin:0 16px 8px;padding:9px;background:none;border:.5px solid var(--blue);border-radius:var(--rsm);font-size:13px;color:var(--blue);cursor:pointer;font-family:inherit}
+.paste-card{background:var(--card);border-radius:var(--r);border:.5px solid var(--border);overflow:hidden}
+.phint{font-size:13px;color:var(--text2);padding:12px 16px 6px;line-height:1.6}
+.pbox{margin:0 16px 8px;background:var(--bg2);border-radius:var(--rs);padding:10px 12px;font-size:12px;color:var(--text2);line-height:1.7;border:.5px solid var(--border)}
+.cbtn{display:block;width:calc(100% - 32px);margin:0 16px 8px;padding:9px;background:none;border:.5px solid var(--blue);border-radius:var(--rs);font-size:13px;color:var(--blue);cursor:pointer;font-family:inherit}
 .pta{width:100%;min-height:90px;padding:10px 16px;font-size:14px;border:none;background:var(--bg2);color:var(--text);outline:none;resize:none;font-family:-apple-system,sans-serif;line-height:1.7;border-top:.5px solid var(--border)}
 .pta::placeholder{color:var(--text3)}
-.parse-btn{display:block;width:calc(100% - 32px);margin:8px 16px 12px;padding:11px;background:var(--green);color:#fff;border:none;border-radius:var(--rsm);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
-/* fab */
+.pbtn{display:block;width:calc(100% - 32px);margin:8px 16px 12px;padding:11px;background:var(--green);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
 .fab-wrap{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg2) 35%)}
 .fab{width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
 .fb{background:var(--blue);color:#fff}
 .fg{background:var(--green);color:#fff}
-/* result */
 .mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.met{background:var(--card);border-radius:var(--rsm);padding:12px 14px;border:.5px solid var(--border)}
+.met{background:var(--card);border-radius:var(--rs);padding:12px 14px;border:.5px solid var(--border)}
 .mlbl{font-size:12px;color:var(--text2);margin-bottom:4px}
 .mval{font-size:22px;font-weight:600}
 .pres{display:flex;align-items:center;padding:11px 16px;border-bottom:.5px solid var(--border);gap:10px}
@@ -98,7 +80,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .prd{font-size:12px;color:var(--text2);margin-top:2px}
 .prdiff{font-size:14px;font-weight:600}
 .pos{color:var(--green)}.neg{color:var(--red)}
-.dcard{background:var(--card);border-radius:var(--radius);padding:13px 16px;border:.5px solid var(--border);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dcard{background:var(--card);border-radius:var(--r);padding:13px 16px;border:.5px solid var(--border);display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .fpill{font-size:13px;font-weight:600;padding:4px 10px;border-radius:99px;background:#ffe5e4;color:#c0392b;white-space:nowrap}
 .tpill{font-size:13px;font-weight:600;padding:4px 10px;border-radius:99px;background:#e5f7ea;color:#1a7a34;white-space:nowrap}
 @media(prefers-color-scheme:dark){.fpill{background:#3d1a1a;color:#ff6b6b}.tpill{background:#1a3d22;color:#4cd964}}
@@ -112,7 +94,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
     <div class="hdr-top">
       <span style="font-size:22px">🧾</span>
       <span class="hdr-title">Bill Splitter</span>
-      <span class="hdr-badge" id="badge"></span>
+      <span class="badge" id="badge"></span>
     </div>
     <div class="tabs">
       <button class="tab on" onclick="go(0)">👥 คน</button>
@@ -124,7 +106,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   <div class="body" id="body"></div>
   <div class="fab-wrap" id="fab"></div>
 </div>
-
 <script>
 var AVC=[['#e8f0fe','#1a56db'],['#e5f7ea','#1a7a34'],['#fff3cd','#856404'],['#f8d7da','#721c24'],['#e8d5f7','#6f42c1'],['#d1f0f7','#0c6278']];
 var tab=0;
@@ -133,17 +114,24 @@ var payers=[{idx:0,amt:0}];
 var items=[];
 var vat=7,svc=10;
 
+var PROMPT='อ่านรายการอาหารและราคาจากบิลในรูปนี้ทั้งหมด\nตอบในรูปแบบ "ชื่ออาหาร ราคา" ทีละบรรทัดเท่านั้น\nไม่ต้องใส่ VAT หรือ service charge\nไม่ต้องมีคำอธิบายอื่น\nเช่น:\nข้าวผัดกุ้ง 120\nต้มยำกุ้ง 180\nน้ำมะนาว 40';
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function av(i,s){
   s=s||36;
   var c=AVC[i%AVC.length];
-  var l=((people[i]&&people[i].name)||'?').trim()[0]||'?';
+  var nm=(people[i]&&people[i].name)||'?';
+  var l=nm.trim()[0]||'?';
   return '<div class="av" style="width:'+s+'px;height:'+s+'px;background:'+c[0]+';color:'+c[1]+'">'+l+'</div>';
 }
 
 function go(t){
   tab=t;
-  var tabs=document.querySelectorAll('.tab');
-  for(var i=0;i<tabs.length;i++) tabs[i].classList.toggle('on',i===t);
+  var ts=document.querySelectorAll('.tab');
+  for(var i=0;i<ts.length;i++) ts[i].classList.toggle('on',i===t);
   draw();
 }
 
@@ -151,69 +139,94 @@ function draw(){
   var b=document.getElementById('body');
   var f=document.getElementById('fab');
   var bd=document.getElementById('badge');
-  var sub=items.reduce(function(s,it){return s+it.price;},0);
   var tot=calcTotal();
   bd.textContent=tot>0?'฿'+Math.round(tot):'';
-  if(tab===0){b.innerHTML=drawPeople();f.innerHTML='<button class="fab fb" onclick="go(1)">ถัดไป: บิล →</button>';}
-  else if(tab===1){b.innerHTML=drawBill();f.innerHTML='<button class="fab fb" onclick="go(2)">ถัดไป: รายการ →</button>';}
-  else if(tab===2){b.innerHTML=drawItems();f.innerHTML='<button class="fab fg" onclick="go(3)">คำนวณ →</button>';}
-  else{b.innerHTML=drawResult();f.innerHTML='<button class="fab fg" onclick="copyRes()">📋 copy ส่ง LINE</button>';}
+  if(tab===0){b.innerHTML=dPeople();f.innerHTML='<button class="fab fb" onclick="go(1)">ถัดไป: บิล →</button>';}
+  else if(tab===1){b.innerHTML=dBill();f.innerHTML='<button class="fab fb" onclick="go(2)">ถัดไป: รายการ →</button>';}
+  else if(tab===2){b.innerHTML=dItems();f.innerHTML='<button class="fab fg" onclick="go(3)">คำนวณ →</button>';}
+  else{b.innerHTML=dResult();f.innerHTML='<button class="fab fg" onclick="copyRes()">📋 copy ส่ง LINE</button>';}
 }
 
-/* ---- People ---- */
-function drawPeople(){
+function dPeople(){
   var pl='';
   for(var i=0;i<people.length;i++){
-    var pi=i;
-    var isPayer=payers.some(function(p){return p.idx===pi;});
-    pl+='<div class="prow">'+av(i)
-      +'<input class="pinp" value="'+esc(people[i].name)+'" onblur="pname('+i+',this.value)" placeholder="ชื่อ">'
-      +(isPayer?'<span class="ptag">จ่ายบิล</span>':'')
-      +'<button class="del" onclick="delP('+i+')">×</button></div>';
+    var isPayer=false;
+    for(var k=0;k<payers.length;k++){if(payers[k].idx===i){isPayer=true;break;}}
+    pl+='<div class="prow">'+av(i);
+    pl+='<input class="pinp" id="pinp'+i+'" value="'+esc(people[i].name)+'" onblur="pname('+i+',this.value)" onkeydown="pkey(event,'+i+')" placeholder="ชื่อ">';
+    if(isPayer) pl+='<span class="ptag">จ่ายบิล</span>';
+    pl+='<button class="del" onclick="delP('+i+')">×</button></div>';
   }
   var pyl='';
   for(var j=0;j<payers.length;j++){
-    var ji=j;
     var opts='';
     for(var k=0;k<people.length;k++) opts+='<option value="'+k+'"'+(payers[j].idx===k?' selected':'')+'>'+esc(people[k].name)+'</option>';
-    pyl+='<div class="pyrow">'+av(payers[j].idx,28)
-      +'<select class="pysel" onchange="payers['+j+'].idx=+this.value;draw()">'+opts+'</select>'
-      +'<input class="pyamt" type="number" inputmode="decimal" value="'+(payers[j].amt||'')+'" onblur="payers['+j+'].amt=+this.value" placeholder="0">'
-      +'<span class="unit">฿</span>'
-      +'<button class="del" onclick="payers.splice('+j+',1);draw()">×</button></div>';
+    pyl+='<div class="pyrow">'+av(payers[j].idx,28);
+    pyl+='<select class="pysel" onchange="payers['+j+'].idx=+this.value;draw()">'+opts+'</select>';
+    pyl+='<input class="pyamt" type="number" inputmode="decimal" value="'+(payers[j].amt||'')+'" onblur="payers['+j+'].amt=+this.value" placeholder="0">';
+    pyl+='<span class="unit">฿</span>';
+    pyl+='<button class="del" onclick="payers.splice('+j+',1);draw()">×</button></div>';
   }
-  return '<div class="sec"><div class="sec-lbl">รายชื่อคน</div>'
+  return '<div class="sec"><div class="slbl">รายชื่อคน</div>'
     +'<div class="card">'+pl+'<div class="arow" onclick="addP()"><div class="aico">+</div><span class="albl">เพิ่มคน</span></div></div></div>'
-    +'<div class="sec"><div class="sec-lbl">ใครจ่ายบิลไปก่อน?</div><div style="font-size:12px;color:var(--text2);padding:0 4px 8px">ใส่ยอดที่จ่ายจริง รวม VAT และ Service charge แล้ว</div>'
+    +'<div class="sec"><div class="slbl">ใครจ่ายบิลไปก่อน?</div>'
+    +'<div class="shint">ใส่ยอดที่จ่ายจริง รวม VAT และ Service charge แล้ว</div>'
     +'<div class="card">'+pyl+'<div class="arow" onclick="payers.push({idx:0,amt:0});draw()"><div class="aico">+</div><span class="albl">เพิ่มคนจ่าย</span></div></div></div>'
-    +'<div class="sec"><div class="sec-lbl">VAT / Service Charge</div>'
+    +'<div class="sec"><div class="slbl">VAT / Service Charge</div>'
     +'<div class="card">'
     +'<div class="row"><span class="lbl">VAT</span><input class="inp" type="number" inputmode="decimal" value="'+vat+'" onblur="vat=+this.value"><span class="unit">%</span></div>'
     +'<div class="row"><span class="lbl">Service</span><input class="inp" type="number" inputmode="decimal" value="'+svc+'" onblur="svc=+this.value"><span class="unit">%</span></div>'
     +'</div></div>';
 }
+
 function pname(i,v){people[i].name=v;draw();}
 function addP(){people.push({name:''});draw();}
 function delP(i){people.splice(i,1);payers=payers.filter(function(p){return p.idx!==i;});draw();}
+function pkey(e,i){
+  if(e.key!=='Enter') return;
+  e.preventDefault();
+  people[i].name=e.target.value;
+  var next=document.getElementById('pinp'+(i+1));
+  if(next){next.focus();}
+  else{addP();setTimeout(function(){var n=document.getElementById('pinp'+(i+1));if(n)n.focus();},60);}
+}
 
-/* ---- Bill paste ---- */
-var PROMPT='อ่านรายการอาหารและราคาจากบิลในรูปนี้ทั้งหมด\nตอบในรูปแบบ "ชื่ออาหาร ราคา" ทีละบรรทัดเท่านั้น\nไม่ต้องใส่ VAT หรือ service charge\nไม่ต้องมีคำอธิบายอื่น\nเช่น:\nข้าวผัดกุ้ง 120\nต้มยำกุ้ง 180\nน้ำมะนาว 40';
-
-function drawBill(){
-  return '<div class="sec"><div class="sec-lbl">วางบิลจาก Claude / Gemini</div>'
+function dBill(){
+  return '<div class="sec"><div class="slbl">วางบิลจาก Claude / Gemini</div>'
     +'<div class="paste-card">'
-    +'<div class="paste-hint">📸 ส่งรูปบิลใน Claude แล้ว copy prompt นี้ไปถาม:</div>'
-    +'<div class="prompt-box">'+esc(PROMPT)+'</div>'
-    +'<button class="copy-btn" onclick="cpPrompt()">📋 copy prompt นี้</button>'
-    +'<div style="font-size:13px;color:var(--text2);padding:8px 16px 4px">แล้ว copy คำตอบมาวางที่นี่:</div>'
+    +'<div class="phint">📸 ส่งรูปบิลใน Claude แล้ว copy prompt นี้ไปถาม:</div>'
+    +'<div class="pbox">'+esc(PROMPT)+'</div>'
+    +'<button class="cbtn" onclick="cpPrompt()">📋 copy prompt นี้</button>'
+    +'<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 16px 4px">'
+    +'<div style="font-size:13px;color:var(--text2);">แล้ว copy คำตอบมาวางที่นี่:</div>'
+    +'<button onclick="pasteToTextarea()" style="background:none;border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:0;">📋 วาง (Paste)</button>'
+    +'</div>'
     +'<textarea class="pta" id="pta" placeholder="ข้าวผัดกุ้ง 120&#10;ต้มยำกุ้ง 180&#10;น้ำมะนาว 40"></textarea>'
-    +'<button class="parse-btn" onclick="parseBill()">✨ แปลงเป็นรายการ</button>'
+    +'<button class="pbtn" onclick="parseBill()">✨ แปลงเป็นรายการ</button>'
     +'</div></div>';
 }
 
 function cpPrompt(){
-  if(navigator.clipboard){navigator.clipboard.writeText(PROMPT).then(function(){alert('Copy แล้ว! ไปวางใน Claude ได้เลย');});}
-  else{var t=document.createElement('textarea');t.value=PROMPT;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);alert('Copy แล้ว!');}
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(PROMPT).then(function(){alert('Copy แล้ว! ไปวางใน Claude ได้เลย');});
+  } else {
+    var t=document.createElement('textarea');
+    t.value=PROMPT;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);
+    alert('Copy แล้ว!');
+  }
+}
+
+function pasteToTextarea() {
+  if (navigator.clipboard && navigator.clipboard.readText) {
+    navigator.clipboard.readText().then(function(text) {
+      var ta = document.getElementById('pta');
+      if (ta) ta.value = text;
+    }).catch(function(err) {
+      alert('เบราว์เซอร์ไม่ให้สิทธิ์ดึงข้อมูล หรือดึงไม่ได้ รบกวนกด Paste ลงในช่องด้วยตัวเองนะคะ');
+    });
+  } else {
+    alert('เบราว์เซอร์นี้ไม่รองรับการดึง Clipboard อัตโนมัติ รบกวนกด Paste ลงในช่องด้วยตัวเองนะคะ');
+  }
 }
 
 function parseBill(){
@@ -228,8 +241,8 @@ function parseBill(){
     if(!line) continue;
     var parts=line.split(' ');
     if(parts.length<2) continue;
-    var lastPart=parts[parts.length-1].replace(',','').replace('฿','');
-    var price=parseFloat(lastPart);
+    var last=parts[parts.length-1].replace(',','').replace('฿','');
+    var price=parseFloat(last);
     var name=parts.slice(0,parts.length-1).join(' ').trim();
     if(!isNaN(price)&&price>0&&name){
       var who=[];
@@ -247,70 +260,110 @@ function parseBill(){
   }
 }
 
-/* ---- Items ---- */
-function drawItems(){
+function dItems(){
+  var allVat=items.length>0;
+  var allSvc=items.length>0;
+  var allPpl=items.length>0;
+  for(var i=0;i<items.length;i++){
+    if(items[i].vatOn===false) allVat=false;
+    if(items[i].svcOn===false) allSvc=false;
+    if(items[i].who.length!==people.length) allPpl=false;
+  }
+  var tbar='';
+  if(items.length>0){
+    tbar='<div class="tbar"><span class="tbar-lbl">ทั้งหมด:</span>';
+    tbar+='<span class="tog'+(allPpl?' on':'')+'" onclick="togAllPpl()">👥 ทุกคน</span>';
+    tbar+='<span class="tog'+(allVat?' on':'')+'" onclick="togAllVat()">VAT '+(allVat?'✓':'✗')+'</span>';
+    tbar+='<span class="tog'+(allSvc?' on':'')+'" onclick="togAllSvc()">SVC '+(allSvc?'✓':'✗')+'</span>';
+    tbar+='</div>';
+  }
   var il='';
   for(var i=0;i<items.length;i++){
     var it=items[i];
+    var vOn=it.vatOn!==false;
+    var sOn=it.svcOn!==false;
     var chips='';
     for(var j=0;j<people.length;j++){
       var on=it.who.indexOf(j)>=0;
       chips+='<span class="chip'+(on?' on':'')+'" onclick="tw('+i+','+j+')">'+esc(people[j].name)+'</span>';
     }
-    var allOn=it.who.length===people.length&&people.length>0;
-    chips+='<span class="chip'+(allOn?' on':'')+'" onclick="ta('+i+')" style="font-style:italic">ทุกคน</span>';
-    var vOn=it.vatOn!==false;
-    var sOn=it.svcOn!==false;
-    il+='<div style="border-bottom:.5px solid var(--border)">'
-      +'<div class="fhdr">'
-      +'<input class="finp" value="'+esc(it.name)+'" onblur="items['+i+'].name=this.value" placeholder="ชื่ออาหาร">'
-      +'<input class="fpinp" type="number" inputmode="decimal" value="'+it.price+'" onblur="items['+i+'].price=+this.value" placeholder="0">'
-      +'<span class="unit">฿</span>'
-      +'<button class="del" onclick="items.splice('+i+',1);draw()">×</button>'
-      +'</div>'
-      +'<div class="chips">'+chips+'</div>'
-      +'<div class="togs">'
-      +'<span class="tog'+(vOn?' on':'')+'" onclick="items['+i+'].vatOn='+(!vOn)+';draw()">VAT '+(vOn?'✓':'✗')+'</span>'
-      +'<span class="tog'+(sOn?' on':'')+'" onclick="items['+i+'].svcOn='+(!sOn)+';draw()">Service '+(sOn?'✓':'✗')+'</span>'
-      +'</div>'
-      +'</div>';
+    var aOn=it.who.length===people.length&&people.length>0;
+    chips+='<span class="chip'+(aOn?' on':'')+'" onclick="ta('+i+')" style="font-style:italic">ทุกคน</span>';
+    il+='<div style="border-bottom:.5px solid var(--border)">';
+    il+='<div class="fhdr">';
+    il+='<input class="finp" id="finp'+i+'" value="'+esc(it.name)+'" onblur="items['+i+'].name=this.value" onkeydown="fkey(event,'+i+')" placeholder="ชื่ออาหาร">';
+    il+='<input class="fpinp" id="fpinp'+i+'" type="number" inputmode="decimal" value="'+it.price+'" onblur="items['+i+'].price=+this.value" onkeydown="fpkey(event,'+i+')" placeholder="0">';
+    il+='<span class="unit">฿</span>';
+    il+='<button class="del" onclick="items.splice('+i+',1);draw()">×</button>';
+    il+='</div>';
+    il+='<div class="chips">'+chips+'</div>';
+    il+='<div class="togs">';
+    il+='<span class="tog'+(vOn?' on':'')+'" onclick="items['+i+'].vatOn='+(!vOn)+';draw()">VAT '+(vOn?'✓':'✗')+'</span>';
+    il+='<span class="tog'+(sOn?' on':'')+'" onclick="items['+i+'].svcOn='+(!sOn)+';draw()">SVC '+(sOn?'✓':'✗')+'</span>';
+    il+='</div></div>';
   }
   var empty=items.length===0?'<div class="empty">📋 ยังไม่มีรายการ<br>ไปแท็บ "บิล" วางข้อความก่อนนะ</div>':'';
-    var allVat=items.length>0&&items.every(function(it){return it.vatOn!==false;});
-  var allSvc=items.length>0&&items.every(function(it){return it.svcOn!==false;});
-  var allPpl=items.length>0&&items.every(function(it){return it.who.length===people.length;});
-  var toggleBar=items.length>0?'<div style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;border-bottom:.5px solid var(--border);align-items:center">'
-    +'<span style="font-size:12px;color:var(--text2);margin-right:2px">ทั้งหมด:</span>'
-    +'<span class="tog'+(allPpl?' on':'')+'" onclick="toggleAllPpl()">👥 ทุกคน</span>'
-    +'<span class="tog'+(allVat?' on':'')+'" onclick="toggleAllVat()">VAT '+(allVat?'✓':'✗')+'</span>'
-    +'<span class="tog'+(allSvc?' on':'')+'" onclick="toggleAllSvc()">SVC '+(allSvc?'✓':'✗')+'</span>'
-    +'</div>':'';
-  return '<div class="sec"><div class="sec-lbl">รายการอาหาร'+(items.length>0?' ('+items.length+')':'')+'</div>'
-    +'<div class="card">'+toggleBar+empty+il
+  return '<div class="sec"><div class="slbl">รายการอาหาร'+(items.length>0?' ('+items.length+')':'')+'</div>'
+    +'<div class="card">'+tbar+empty+il
     +'<div class="arow" onclick="addItem()"><div class="aico">+</div><span class="albl">เพิ่มรายการเอง</span></div>'
     +'</div></div>';
 }
+
 function tw(i,j){var idx=items[i].who.indexOf(j);if(idx>=0)items[i].who.splice(idx,1);else items[i].who.push(j);draw();}
 function ta(i){items[i].who=items[i].who.length===people.length?[]:people.map(function(_,j){return j;});draw();}
 function addItem(){
   var who=people.map(function(_,j){return j;});
-  items.push({name:'',price:0,who:who,vatOn:true,svcOn:true});draw();
+  items.push({name:'',price:0,who:who,vatOn:true,svcOn:true});
+  draw();
+  setTimeout(function(){var n=document.getElementById('finp'+(items.length-1));if(n)n.focus();},60);
+}
+function togAllPpl(){
+  var allOn=true;
+  for(var i=0;i<items.length;i++){if(items[i].who.length!==people.length){allOn=false;break;}}
+  for(var i=0;i<items.length;i++) items[i].who=allOn?[]:people.map(function(_,j){return j;});
+  draw();
+}
+function togAllVat(){
+  var allOn=true;
+  for(var i=0;i<items.length;i++){if(items[i].vatOn===false){allOn=false;break;}}
+  for(var i=0;i<items.length;i++) items[i].vatOn=!allOn;
+  draw();
+}
+function togAllSvc(){
+  var allOn=true;
+  for(var i=0;i<items.length;i++){if(items[i].svcOn===false){allOn=false;break;}}
+  for(var i=0;i<items.length;i++) items[i].svcOn=!allOn;
+  draw();
+}
+function fkey(e,i){
+  if(e.key!=='Enter') return;
+  e.preventDefault();
+  items[i].name=e.target.value;
+  var p=document.getElementById('fpinp'+i);
+  if(p) p.focus();
+}
+function fpkey(e,i){
+  if(e.key!=='Enter') return;
+  e.preventDefault();
+  items[i].price=+e.target.value;
+  var next=document.getElementById('finp'+(i+1));
+  if(next){next.focus();}
+  else{addItem();}
 }
 
-/* ---- Calc ---- */
 function calcTotal(){
   var tot=0;
   for(var i=0;i<items.length;i++){
-    var it=items[i];
-    var v=it.vatOn!==false?vat:0;
-    var s=it.svcOn!==false?svc:0;
-    tot+=it.price*(1+s/100)*(1+v/100);
+    var v=items[i].vatOn!==false?vat:0;
+    var s=items[i].svcOn!==false?svc:0;
+    tot+=items[i].price*(1+s/100)*(1+v/100);
   }
   return tot;
 }
+
 function calcOwed(){
-  var owed={};
-  for(var i=0;i<people.length;i++) owed[i]=0;
+  var owed={},paid={},bal={};
+  for(var i=0;i<people.length;i++){owed[i]=0;paid[i]=0;}
   for(var i=0;i<items.length;i++){
     var it=items[i];
     if(!it.who.length) continue;
@@ -321,19 +374,19 @@ function calcOwed(){
     for(var j=0;j<it.who.length;j++) owed[it.who[j]]+=sh;
   }
   for(var i=0;i<people.length;i++) owed[i]=Math.round(owed[i]*100)/100;
-  var paid={};
-  for(var i=0;i<people.length;i++) paid[i]=0;
   for(var i=0;i<payers.length;i++) paid[payers[i].idx]=(paid[payers[i].idx]||0)+payers[i].amt;
-  var bal={};
   for(var i=0;i<people.length;i++) bal[i]=Math.round((paid[i]-owed[i])*100)/100;
   return{owed:owed,paid:paid,bal:bal,total:calcTotal(),sub:items.reduce(function(s,it){return s+it.price;},0)};
 }
+
 function settle(bal){
   var b={},tx=[];
   for(var k in bal) b[k]=bal[k];
   for(var iter=0;iter<30;iter++){
-    var dr=Object.keys(b).filter(function(k){return b[k]<-0.01;}).sort(function(a,c){return b[a]-b[c];});
-    var cr=Object.keys(b).filter(function(k){return b[k]>0.01;}).sort(function(a,c){return b[c]-b[a];});
+    var dr=[],cr=[];
+    for(var k in b){if(b[k]<-0.01)dr.push(k);if(b[k]>0.01)cr.push(k);}
+    dr.sort(function(a,c){return b[a]-b[c];});
+    cr.sort(function(a,c){return b[c]-b[a];});
     if(!dr.length||!cr.length) break;
     var df=dr[0],cf=cr[0];
     var amt=Math.min(-b[df],b[cf]);
@@ -343,80 +396,64 @@ function settle(bal){
   return tx;
 }
 
-/* ---- Result ---- */
-function drawResult(){
+function dResult(){
   var c=calcOwed();
-  var tx=settle(Object.assign({},c.bal));
+  var tx=settle(JSON.parse(JSON.stringify(c.bal)));
   var pr='';
   for(var i=0;i<people.length;i++){
     var diff=c.bal[i];
-    pr+='<div class="pres">'+av(i)
-      +'<div class="prm"><div class="prn">'+esc(people[i].name)+'</div>'
-      +'<div class="prd">ส่วนแบ่ง ฿'+c.owed[i].toFixed(2)+' · จ่ายแล้ว ฿'+c.paid[i].toFixed(2)+'</div></div>'
-      +'<div class="prdiff '+(diff>=0?'pos':'neg')+'">'+(diff>=0?'+':'')+'฿'+Math.abs(diff).toFixed(2)+'</div>'
-      +'</div>';
+    pr+='<div class="pres">'+av(i);
+    pr+='<div class="prm"><div class="prn">'+esc(people[i].name)+'</div>';
+    pr+='<div class="prd">ส่วนแบ่ง ฿'+c.owed[i].toFixed(2)+' · จ่ายแล้ว ฿'+c.paid[i].toFixed(2)+'</div></div>';
+    pr+='<div class="prdiff '+(diff>=0?'pos':'neg')+'">'+(diff>=0?'+':'')+'฿'+Math.abs(diff).toFixed(2)+'</div>';
+    pr+='</div>';
   }
-  var dc=tx.length===0
-    ?'<div class="empty" style="background:var(--card);border-radius:var(--radius);border:.5px solid var(--border)">🎉<br>ทุกคนเท่ากันหมดเลย!</div>'
-    :'';
-  for(var i=0;i<tx.length;i++){
-    dc+='<div class="dcard">'
-      +'<span class="fpill">'+esc(people[tx[i].from].name)+'</span>'
-      +'<span style="color:var(--text3)">→</span>'
-      +'<span class="tpill">'+esc(people[tx[i].to].name)+'</span>'
-      +'<span class="damt">฿'+tx[i].amt.toFixed(2)+'</span>'
-      +'</div>';
+  var dc='';
+  if(tx.length===0){
+    dc='<div class="empty" style="background:var(--card);border-radius:var(--r);border:.5px solid var(--border)">🎉<br>ทุกคนเท่ากันหมดเลย!</div>';
+  } else {
+    for(var i=0;i<tx.length;i++){
+      dc+='<div class="dcard">';
+      dc+='<span class="fpill">'+esc(people[tx[i].from].name)+'</span>';
+      dc+='<span style="color:var(--text3)">→</span>';
+      dc+='<span class="tpill">'+esc(people[tx[i].to].name)+'</span>';
+      dc+='<span class="damt">฿'+tx[i].amt.toFixed(2)+'</span>';
+      dc+='</div>';
+    }
   }
   var svcA=0,vatA=0;
   for(var i=0;i<items.length;i++){
-    var it=items[i];
-    var s=it.svcOn!==false?svc:0;
-    var v=it.vatOn!==false?vat:0;
-    svcA+=it.price*(s/100);
-    vatA+=it.price*(1+s/100)*(v/100);
+    var s=items[i].svcOn!==false?svc:0;
+    var v=items[i].vatOn!==false?vat:0;
+    svcA+=items[i].price*(s/100);
+    vatA+=items[i].price*(1+s/100)*(v/100);
   }
   return '<div class="mrow">'
     +'<div class="met"><div class="mlbl">ยอดอาหาร</div><div class="mval">฿'+Math.round(c.sub)+'</div></div>'
     +'<div class="met"><div class="mlbl">รวมทั้งหมด</div><div class="mval">฿'+Math.round(c.total)+'</div></div>'
     +'</div>'
     +'<div class="sec"><div class="card" style="padding:12px 16px">'
-    +'<div class="row" style="padding:4px 0"><span style="font-size:14px;color:var(--text2)">Service ('+svc+'%)</span><span style="font-size:14px;margin-left:auto">+฿'+svcA.toFixed(2)+'</span></div>'
-    +'<div class="row" style="padding:4px 0"><span style="font-size:14px;color:var(--text2)">VAT ('+vat+'%)</span><span style="font-size:14px;margin-left:auto">+฿'+vatA.toFixed(2)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--text2)"><span>Service ('+svc+'%)</span><span>+฿'+svcA.toFixed(2)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--text2)"><span>VAT ('+vat+'%)</span><span>+฿'+vatA.toFixed(2)+'</span></div>'
     +'<div style="height:.5px;background:var(--border);margin:6px 0"></div>'
     +'<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:600;padding:4px 0"><span>รวม</span><span>฿'+c.total.toFixed(2)+'</span></div>'
     +'</div></div>'
-    +'<div class="sec"><div class="sec-lbl">สรุปแต่ละคน</div><div class="card">'+pr+'</div></div>'
-    +'<div class="sec"><div class="sec-lbl">ใครโอนให้ใคร</div>'+dc+'</div>';
+    +'<div class="sec"><div class="slbl">สรุปแต่ละคน</div><div class="card">'+pr+'</div></div>'
+    +'<div class="sec"><div class="slbl">ใครโอนให้ใคร</div>'+dc+'</div>';
 }
 
 function copyRes(){
   var c=calcOwed();
-  var tx=settle(Object.assign({},c.bal));
+  var tx=settle(JSON.parse(JSON.stringify(c.bal)));
   var t='🧾 หารบิล\nยอดรวม ฿'+c.total.toFixed(2)+'\n\n';
-  if(tx.length===0)t+='ทุกคนเท่ากันหมดเลย! 🎉\n';
-  else for(var i=0;i<tx.length;i++) t+='• '+people[tx[i].from].name+' โอนให้ '+people[tx[i].to].name+' ฿'+tx[i].amt.toFixed(2)+'\n';
-  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){alert('Copy แล้ว! 🎉');});}
-  else{var el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Copy แล้ว! 🎉');}
-}
-
-function toggleAllPpl(){
-  var allOn=items.every(function(it){return it.who.length===people.length;});
-  for(var i=0;i<items.length;i++){
-    items[i].who=allOn?[]:people.map(function(_,j){return j;});
+  if(tx.length===0){t+='ทุกคนเท่ากันหมดเลย! 🎉\n';}
+  else{for(var i=0;i<tx.length;i++) t+='• '+people[tx[i].from].name+' โอนให้ '+people[tx[i].to].name+' ฿'+tx[i].amt.toFixed(2)+'\n';}
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(t).then(function(){alert('Copy แล้ว! 🎉');});
+  } else {
+    var el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Copy แล้ว! 🎉');
   }
-  draw();
 }
-function toggleAllVat(){
-  var allOn=items.every(function(it){return it.vatOn!==false;});
-  for(var i=0;i<items.length;i++) items[i].vatOn=!allOn;
-  draw();
-}
-function toggleAllSvc(){
-  var allOn=items.every(function(it){return it.svcOn!==false;});
-  for(var i=0;i<items.length;i++) items[i].svcOn=!allOn;
-  draw();
-}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 draw();
 </script>
