@@ -1,0 +1,294 @@
+
+<h2 class="sr-only">Bill Splitter — แอปหารค่าอาหารและคำนวณว่าใครเป็นหนี้ใคร</h2>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.app { padding: 1rem 0; max-width: 680px; }
+.section-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.75rem; }
+.row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+input[type="text"], input[type="number"], select { flex: 1; }
+.tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 3px 8px; border-radius: 99px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); cursor: pointer; user-select: none; }
+.tag.active { background: #E6F1FB; border-color: #378ADD; color: #0C447C; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.add-btn { background: none; border: 0.5px dashed var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 12px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
+.add-btn:hover { background: var(--color-background-secondary); }
+.remove-btn { background: none; border: none; color: var(--color-text-tertiary); cursor: pointer; font-size: 18px; padding: 0 4px; line-height: 1; }
+.remove-btn:hover { color: var(--color-text-danger); }
+.calc-btn { width: 100%; padding: 10px; background: #185FA5; color: #E6F1FB; border: none; border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 0.5rem; }
+.calc-btn:hover { background: #0C447C; }
+.result-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 8px; }
+.arrow-row { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.amount-badge { font-size: 15px; font-weight: 500; color: #0C447C; }
+.person-pill { font-size: 13px; font-weight: 500; padding: 2px 10px; border-radius: 99px; }
+.payer-pill { background: #EAF3DE; color: #3B6D11; }
+.receiver-pill { background: #E6F1FB; color: #185FA5; }
+.summary-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--color-text-secondary); padding: 3px 0; }
+.summary-total { font-weight: 500; color: var(--color-text-primary); font-size: 14px; }
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 8px 0; }
+.paste-area { width: 100%; min-height: 80px; font-size: 13px; resize: vertical; }
+.hint { font-size: 12px; color: var(--color-text-tertiary); margin-top: 4px; }
+.charge-row { display: flex; gap: 8px; align-items: center; }
+.charge-row label { font-size: 13px; color: var(--color-text-secondary); white-space: nowrap; }
+.tabs { display: flex; gap: 0; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); overflow: hidden; margin-bottom: 1rem; }
+.tab { flex: 1; padding: 7px; font-size: 13px; border: none; background: none; cursor: pointer; color: var(--color-text-secondary); }
+.tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; }
+.step-label { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); margin-bottom: 2px; }
+.no-result { font-size: 14px; color: var(--color-text-tertiary); text-align: center; padding: 1.5rem; }
+</style>
+
+<div class="app">
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('setup')">1. ตั้งค่า</button>
+  <button class="tab" onclick="switchTab('items')">2. รายการอาหาร</button>
+  <button class="tab" onclick="switchTab('result')">3. ผลลัพธ์</button>
+</div>
+
+<div id="tab-setup">
+  <div class="section-card">
+    <div class="step-label">รายชื่อคน</div>
+    <div class="section-title">ใครมาบ้าง?</div>
+    <div id="people-list"></div>
+    <button class="add-btn" onclick="addPerson()"><i class="ti ti-plus" aria-hidden="true"></i> เพิ่มคน</button>
+  </div>
+
+  <div class="section-card">
+    <div class="step-label">ใครจ่ายบิลไปก่อน?</div>
+    <div class="section-title">คนจ่าย (payer)</div>
+    <div id="payer-list"></div>
+    <div class="hint">เพิ่มได้หลายคน กรณีช่วยกันจ่าย</div>
+  </div>
+
+  <div class="section-card">
+    <div class="step-label">ค่าธรรมเนียมเพิ่มเติม</div>
+    <div class="section-title">VAT / Service Charge</div>
+    <div class="charge-row" style="margin-bottom:8px">
+      <label>VAT (%)</label>
+      <input type="number" id="vat" value="7" min="0" max="100" style="max-width:80px">
+      <label>Service (%)</label>
+      <input type="number" id="service" value="10" min="0" max="100" style="max-width:80px">
+    </div>
+    <div class="hint">ใส่ 0 ถ้าไม่มี — ระบบจะคำนวณบนยอดรวมก่อนภาษี</div>
+  </div>
+
+  <button class="calc-btn" onclick="switchTab('items')">ถัดไป: เพิ่มรายการอาหาร →</button>
+</div>
+
+<div id="tab-items" style="display:none">
+  <div class="section-card">
+    <div class="step-label">วางรายการจากบิล หรือเพิ่มเอง</div>
+    <div class="section-title">รายการอาหาร</div>
+    <div id="items-list"></div>
+    <button class="add-btn" onclick="addItem()"><i class="ti ti-plus" aria-hidden="true"></i> เพิ่มรายการ</button>
+  </div>
+
+  <div class="section-card">
+    <div class="step-label">ส่งรายการบิลให้ Claude อ่านให้</div>
+    <div class="section-title">วางข้อความจากบิล (optional)</div>
+    <textarea class="paste-area" id="bill-text" placeholder="วางข้อความบิลที่นี่ เช่น&#10;ข้าวผัดกุ้ง 120&#10;ต้มยำกุ้ง 180&#10;น้ำมะนาว 40"></textarea>
+    <button class="calc-btn" style="margin-top:8px; background:#3B6D11" onclick="parseBillText()"><i class="ti ti-wand" aria-hidden="true"></i> แปลงเป็นรายการอัตโนมัติ</button>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">คำนวณ →</button>
+</div>
+
+<div id="tab-result" style="display:none">
+  <div class="section-card" id="summary-card">
+    <div class="section-title">สรุปยอด</div>
+    <div id="summary-content"><div class="no-result">ยังไม่มีข้อมูล — กลับไปตั้งค่าก่อนนะ</div></div>
+  </div>
+  <div class="section-card">
+    <div class="section-title">ใครโอนให้ใครเท่าไหร่</div>
+    <div id="result-content"><div class="no-result">กด "คำนวณ" ก่อนนะ</div></div>
+  </div>
+  <button class="calc-btn" style="background:#3B6D11; margin-top:0.5rem" onclick="copyResult()"><i class="ti ti-copy" aria-hidden="true"></i> copy สรุป</button>
+</div>
+
+</div>
+
+<script>
+let people = ['นาน่า','อิน','มิ้ว'];
+let payers = [{name:'นาน่า', amount:500}];
+let items = [
+  {name:'ข้าวผัดกุ้ง', price:120, who:['นาน่า','อิน']},
+  {name:'ต้มยำกุ้ง', price:180, who:['มิ้ว']},
+  {name:'น้ำมะนาว', price:40, who:['นาน่า','อิน','มิ้ว']},
+];
+
+function switchTab(t) {
+  ['setup','items','result'].forEach(id => {
+    document.getElementById('tab-'+id).style.display = id===t?'block':'none';
+    document.querySelectorAll('.tab')[['setup','items','result'].indexOf(id)].classList.toggle('active', id===t);
+  });
+  if(t==='setup') renderSetup();
+  if(t==='items') renderItems();
+}
+
+function renderSetup() {
+  const pl = document.getElementById('people-list');
+  pl.innerHTML = people.map((p,i) => `
+    <div class="row">
+      <input type="text" value="${p}" oninput="people[${i}]=this.value; renderSetup()" placeholder="ชื่อ">
+      <button class="remove-btn" onclick="people.splice(${i},1); renderSetup()">×</button>
+    </div>`).join('');
+
+  const pyl = document.getElementById('payer-list');
+  pyl.innerHTML = payers.map((py,i) => `
+    <div class="row">
+      <select onchange="payers[${i}].name=this.value">
+        ${people.map(p=>`<option value="${p}" ${py.name===p?'selected':''}>${p}</option>`).join('')}
+      </select>
+      <input type="number" value="${py.amount}" placeholder="จ่ายไปเท่าไหร่" oninput="payers[${i}].amount=+this.value" style="max-width:120px">
+      <button class="remove-btn" onclick="payers.splice(${i},1); renderSetup()">×</button>
+    </div>`).join('');
+  const addPayerBtn = document.createElement('button');
+  addPayerBtn.className = 'add-btn';
+  addPayerBtn.innerHTML = '<i class="ti ti-plus" aria-hidden="true"></i> เพิ่มคนจ่าย';
+  addPayerBtn.onclick = () => { payers.push({name:people[0]||'', amount:0}); renderSetup(); };
+  pyl.appendChild(addPayerBtn);
+}
+
+function addPerson() { people.push(''); renderSetup(); }
+
+function renderItems() {
+  const il = document.getElementById('items-list');
+  il.innerHTML = items.map((item,i) => `
+    <div class="result-card" style="margin-bottom:8px">
+      <div class="row" style="margin-bottom:6px">
+        <input type="text" value="${item.name}" oninput="items[${i}].name=this.value" placeholder="ชื่ออาหาร">
+        <input type="number" value="${item.price}" oninput="items[${i}].price=+this.value" placeholder="ราคา" style="max-width:90px">
+        <button class="remove-btn" onclick="items.splice(${i},1); renderItems()">×</button>
+      </div>
+      <div style="font-size:12px; color:var(--color-text-tertiary); margin-bottom:4px">ใครกินบ้าง?</div>
+      <div class="tag-row">
+        ${people.map(p=>`<span class="tag ${item.who.includes(p)?'active':''}" onclick="toggleWho(${i},'${p}')">${p}</span>`).join('')}
+        <span class="tag ${item.who.length===people.length&&people.length>0?'active':''}" onclick="toggleAll(${i})" style="font-style:italic">ทุกคน</span>
+      </div>
+    </div>`).join('');
+}
+
+function toggleWho(i, p) {
+  const idx = items[i].who.indexOf(p);
+  if(idx>=0) items[i].who.splice(idx,1);
+  else items[i].who.push(p);
+  renderItems();
+}
+
+function toggleAll(i) {
+  if(items[i].who.length === people.length) items[i].who = [];
+  else items[i].who = [...people];
+  renderItems();
+}
+
+function addItem() { items.push({name:'', price:0, who:[]}); renderItems(); }
+
+function parseBillText() {
+  const text = document.getElementById('bill-text').value.trim();
+  if(!text) return;
+  const lines = text.split('\n');
+  const newItems = [];
+  lines.forEach(line => {
+    const match = line.match(/^(.+?)\s+([\d,]+)\s*$/);
+    if(match) {
+      const price = parseFloat(match[2].replace(',',''));
+      if(!isNaN(price)) newItems.push({name:match[1].trim(), price, who:[...people]});
+    }
+  });
+  if(newItems.length>0) { items = [...items, ...newItems]; renderItems(); document.getElementById('bill-text').value=''; }
+}
+
+function calculate() {
+  const vat = +(document.getElementById('vat').value)||0;
+  const svc = +(document.getElementById('service').value)||0;
+
+  const subtotal = items.reduce((s,it)=>s+it.price,0);
+  const multiplier = (1 + svc/100) * (1 + vat/100);
+  const totalBill = subtotal * multiplier;
+
+  const owed = {};
+  people.forEach(p => owed[p] = 0);
+
+  items.forEach(item => {
+    if(item.who.length===0) return;
+    const share = item.price / item.who.length;
+    item.who.forEach(p => { owed[p] = (owed[p]||0) + share; });
+  });
+
+  const chargeExtra = totalBill - subtotal;
+  people.forEach(p => {
+    const proportion = subtotal>0 ? owed[p]/subtotal : 1/people.length;
+    owed[p] = owed[p] + chargeExtra * proportion;
+  });
+
+  const paid = {};
+  people.forEach(p => paid[p] = 0);
+  payers.forEach(py => { paid[py.name] = (paid[py.name]||0) + py.amount; });
+
+  const balance = {};
+  people.forEach(p => balance[p] = +(paid[p] - owed[p]).toFixed(2));
+
+  const transactions = settleDebts({...balance});
+
+  const sc = document.getElementById('summary-content');
+  sc.innerHTML = `
+    <div class="summary-row"><span>ยอดอาหาร</span><span>${subtotal.toFixed(2)} บาท</span></div>
+    ${svc>0?`<div class="summary-row"><span>Service charge (${svc}%)</span><span>+${(subtotal*svc/100).toFixed(2)} บาท</span></div>`:''}
+    ${vat>0?`<div class="summary-row"><span>VAT (${vat}%)</span><span>+${(subtotal*(1+svc/100)*vat/100).toFixed(2)} บาท</span></div>`:''}
+    <hr class="divider">
+    <div class="summary-row summary-total"><span>รวมทั้งหมด</span><span>${totalBill.toFixed(2)} บาท</span></div>
+    <hr class="divider">
+    ${people.map(p=>`<div class="summary-row"><span>${p}</span><span>${owed[p].toFixed(2)} บาท</span></div>`).join('')}
+  `;
+
+  const rc = document.getElementById('result-content');
+  if(transactions.length===0) {
+    rc.innerHTML = '<div class="no-result"><i class="ti ti-circle-check" style="font-size:24px; color:#3B6D11" aria-hidden="true"></i><br>ทุกคนเท่ากันหมดเลย! ไม่ต้องโอนใคร</div>';
+  } else {
+    rc.innerHTML = transactions.map(t=>`
+      <div class="result-card">
+        <div class="arrow-row">
+          <span class="person-pill payer-pill">${t.from}</span>
+          <i class="ti ti-arrow-right" style="color:var(--color-text-tertiary)" aria-hidden="true"></i>
+          <span class="person-pill receiver-pill">${t.to}</span>
+          <span style="flex:1"></span>
+          <span class="amount-badge">${t.amount.toFixed(2)} บาท</span>
+        </div>
+      </div>`).join('');
+  }
+
+  switchTab('result');
+}
+
+function settleDebts(bal) {
+  const txns = [];
+  const eps = 0.01;
+  for(let iter=0; iter<50; iter++) {
+    const debtors = Object.entries(bal).filter(([,v])=>v<-eps).sort((a,b)=>a[1]-b[1]);
+    const creditors = Object.entries(bal).filter(([,v])=>v>eps).sort((a,b)=>b[1]-a[1]);
+    if(!debtors.length||!creditors.length) break;
+    const [dName, dVal] = debtors[0];
+    const [cName, cVal] = creditors[0];
+    const amt = Math.min(-dVal, cVal);
+    txns.push({from:dName, to:cName, amount:+amt.toFixed(2)});
+    bal[dName] += amt;
+    bal[cName] -= amt;
+  }
+  return txns;
+}
+
+function copyResult() {
+  const txns = document.querySelectorAll('#result-content .result-card .arrow-row');
+  if(!txns.length) { alert('ยังไม่มีผลลัพธ์'); return; }
+  let text = '💸 สรุปหารบิล\n';
+  txns.forEach(r => {
+    const spans = r.querySelectorAll('span');
+    text += `• ${spans[0].textContent} โอนให้ ${spans[1].textContent} — ${spans[2]?.textContent||''}\n`;
+  });
+  navigator.clipboard.writeText(text).then(()=>alert('Copy แล้ว! ไปวางใน Line ได้เลย'));
+}
+
+renderSetup();
+renderItems();
+</script>
