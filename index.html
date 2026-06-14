@@ -124,7 +124,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   <div class="body" id="body"></div>
   <div class="fab-wrap" id="fab"></div>
 </div>
- 
+
 <script>
 var AVC=[['#e8f0fe','#1a56db'],['#e5f7ea','#1a7a34'],['#fff3cd','#856404'],['#f8d7da','#721c24'],['#e8d5f7','#6f42c1'],['#d1f0f7','#0c6278']];
 var tab=0;
@@ -132,21 +132,21 @@ var people=[{name:'นาน่า'},{name:'อิน'},{name:'มิ้ว'}];
 var payers=[{idx:0,amt:0}];
 var items=[];
 var vat=7,svc=10;
- 
+
 function av(i,s){
   s=s||36;
   var c=AVC[i%AVC.length];
   var l=((people[i]&&people[i].name)||'?').trim()[0]||'?';
   return '<div class="av" style="width:'+s+'px;height:'+s+'px;background:'+c[0]+';color:'+c[1]+'">'+l+'</div>';
 }
- 
+
 function go(t){
   tab=t;
   var tabs=document.querySelectorAll('.tab');
   for(var i=0;i<tabs.length;i++) tabs[i].classList.toggle('on',i===t);
   draw();
 }
- 
+
 function draw(){
   var b=document.getElementById('body');
   var f=document.getElementById('fab');
@@ -159,7 +159,7 @@ function draw(){
   else if(tab===2){b.innerHTML=drawItems();f.innerHTML='<button class="fab fg" onclick="go(3)">คำนวณ →</button>';}
   else{b.innerHTML=drawResult();f.innerHTML='<button class="fab fg" onclick="copyRes()">📋 copy ส่ง LINE</button>';}
 }
- 
+
 /* ---- People ---- */
 function drawPeople(){
   var pl='';
@@ -195,10 +195,10 @@ function drawPeople(){
 function pname(i,v){people[i].name=v;draw();}
 function addP(){people.push({name:''});draw();}
 function delP(i){people.splice(i,1);payers=payers.filter(function(p){return p.idx!==i;});draw();}
- 
+
 /* ---- Bill paste ---- */
 var PROMPT='อ่านรายการอาหารและราคาจากบิลในรูปนี้ทั้งหมด\nตอบในรูปแบบ "ชื่ออาหาร ราคา" ทีละบรรทัดเท่านั้น\nไม่ต้องใส่ VAT หรือ service charge\nไม่ต้องมีคำอธิบายอื่น\nเช่น:\nข้าวผัดกุ้ง 120\nต้มยำกุ้ง 180\nน้ำมะนาว 40';
- 
+
 function drawBill(){
   return '<div class="sec"><div class="sec-lbl">วางบิลจาก Claude / Gemini</div>'
     +'<div class="paste-card">'
@@ -210,12 +210,12 @@ function drawBill(){
     +'<button class="parse-btn" onclick="parseBill()">✨ แปลงเป็นรายการ</button>'
     +'</div></div>';
 }
- 
+
 function cpPrompt(){
   if(navigator.clipboard){navigator.clipboard.writeText(PROMPT).then(function(){alert('Copy แล้ว! ไปวางใน Claude ได้เลย');});}
   else{var t=document.createElement('textarea');t.value=PROMPT;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);alert('Copy แล้ว!');}
 }
- 
+
 function parseBill(){
   var ta=document.getElementById('pta');
   if(!ta){alert('ไม่พบ textarea');return;}
@@ -246,7 +246,7 @@ function parseBill(){
     alert('ไม่พบรายการ\nลองรูปแบบ: ชื่ออาหาร ราคา\nเช่น: ข้าวผัดกุ้ง 120');
   }
 }
- 
+
 /* ---- Items ---- */
 function drawItems(){
   var il='';
@@ -287,7 +287,7 @@ function addItem(){
   var who=people.map(function(_,j){return j;});
   items.push({name:'',price:0,who:who,vatOn:true,svcOn:true});draw();
 }
- 
+
 /* ---- Calc ---- */
 function calcTotal(){
   var tot=0;
@@ -333,7 +333,7 @@ function settle(bal){
   }
   return tx;
 }
- 
+
 /* ---- Result ---- */
 function drawResult(){
   var c=calcOwed();
@@ -379,7 +379,7 @@ function drawResult(){
     +'<div class="sec"><div class="sec-lbl">สรุปแต่ละคน</div><div class="card">'+pr+'</div></div>'
     +'<div class="sec"><div class="sec-lbl">ใครโอนให้ใคร</div>'+dc+'</div>';
 }
- 
+
 function copyRes(){
   var c=calcOwed();
   var tx=settle(Object.assign({},c.bal));
@@ -389,9 +389,9 @@ function copyRes(){
   if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){alert('Copy แล้ว! 🎉');});}
   else{var el=document.createElement('textarea');el.value=t;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);alert('Copy แล้ว! 🎉');}
 }
- 
+
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
- 
+
 draw();
 </script>
 </body>
